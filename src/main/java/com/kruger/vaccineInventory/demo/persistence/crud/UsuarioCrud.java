@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UsuarioCrud extends CrudRepository<Usuario, Integer> {
     List<Usuario> findAllByIdRol(int idRol);
     Optional<List<Usuario>> findAllByEstadoVacunacionOrderByApellidosAsc(boolean estadoVacunacion);
+    Usuario findByNombreUsuario(String nombreUsuario);
 }

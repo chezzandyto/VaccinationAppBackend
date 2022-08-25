@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VaccineCrud extends CrudRepository<RegistroVacuna, Integer> {
-    Optional<List<Usuario>> findAllByIdVacuna(int idVacuna);
-    Optional<List<Usuario>> findAllByFechaVacunaBetween(
+    Optional<List<RegistroVacuna>> findAllByIdVacuna(int idVacuna);
+    Optional<List<RegistroVacuna>> findAllByFechaVacunaBetween(
             Date desde, Date hasta);
 }

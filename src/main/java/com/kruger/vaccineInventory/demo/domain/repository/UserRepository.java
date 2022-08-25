@@ -13,4 +13,5 @@ public interface UserRepository {
     //Optional<List<User>> getByVaccineType(int vaccineId);
     User save(User user);
     void delete(int userId);
+    Optional<User> findByUserName(String username);
 }

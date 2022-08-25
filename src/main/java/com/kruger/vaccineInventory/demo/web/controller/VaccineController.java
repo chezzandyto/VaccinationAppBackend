@@ -37,8 +37,8 @@ public class VaccineController {
 
     @GetMapping("/getusersByVaccineType/{typeId}")
     public ResponseEntity<List<User>> getByVaccineType(@PathVariable("typeId") int vaccineTypeId){
-        return vaccineService.getByVaccineType(vaccineTypeId)
-                .map(response -> new ResponseEntity<>(response, HttpStatus.FOUND))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<List<User>> users = vaccineService.getByVaccineType(vaccineTypeId);
+        if(users.get().isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(users.get(), HttpStatus.FOUND);
     }
 }

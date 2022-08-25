@@ -51,4 +51,10 @@ public class UsuarioRepository implements UserRepository {
     public void delete(int userId) {
         usuarioCrud.deleteById(userId);
     }
+
+    @Override
+    public Optional<User> findByUserName(String username) {
+        Optional<Usuario> usuario = Optional.of(usuarioCrud.findByNombreUsuario(username));
+        return usuario.map(obj -> userMapper.toUser(obj));
+    }
 }

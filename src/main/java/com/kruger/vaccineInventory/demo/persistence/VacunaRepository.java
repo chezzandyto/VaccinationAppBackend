@@ -11,6 +11,7 @@ import com.kruger.vaccineInventory.demo.persistence.mapper.VaccineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,13 @@ public class VacunaRepository implements VaccineRepository {
 
     @Override
     public Optional<List<User>> getByVaccineType(int vaccineId) {
-        return vaccineCrud.findAllByIdVacuna(vaccineId).map(usuarios -> userMapper.toUsers(usuarios));
+        Optional<List<RegistroVacuna>> vaccineRegister = vaccineCrud.findAllByIdVacuna(vaccineId);
+        List<User> response = new ArrayList<User>();
+        for (RegistroVacuna vacuna: vaccineRegister.get()) {
+            response.add(userMapper.toUser(vacuna.getUsuario()));
+            //usuarioCrud.findById(vacuna.getId()).map(usuario -> userMapper.toUser(usuario)).map(user -> response.get().add(user));
+        }
+        return Optional.of(response);
     }
 
     @Override
