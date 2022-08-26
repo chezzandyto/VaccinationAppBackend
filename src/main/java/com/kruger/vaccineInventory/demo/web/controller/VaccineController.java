@@ -9,7 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +68,17 @@ public class VaccineController {
     @GetMapping("/getusersByVaccineType/{typeId}")
     public ResponseEntity<List<User>> getByVaccineType(@PathVariable("typeId") int vaccineTypeId){
         Optional<List<User>> users = vaccineService.getByVaccineType(vaccineTypeId);
+        if(users.get().isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(users.get(), HttpStatus.FOUND);
+    }
+
+    @Secured({ROLE_ADMIN})
+    @GetMapping("/getUsersVaccinatedByDateRange")
+    public ResponseEntity<List<User>> getUsersByDateRange(@RequestParam(name = "from") String fromDate, @RequestParam(name = "to") String toDate) throws ParseException {
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateBefore = parser.parse(fromDate);
+        Date dateAfter = parser.parse(toDate);
+        Optional<List<User>> users = vaccineService.getUsersVaccinatedByDateRange(dateBefore, dateAfter);
         if(users.get().isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(users.get(), HttpStatus.FOUND);
     }

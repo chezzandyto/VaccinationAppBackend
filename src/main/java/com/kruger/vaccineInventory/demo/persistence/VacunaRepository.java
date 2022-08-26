@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,5 +58,15 @@ public class VacunaRepository implements VaccineRepository {
     @Override
     public void delete(int vaccineId) {
         vaccineCrud.deleteById(vaccineId);
+    }
+
+    @Override
+    public Optional<List<User>> getUsersVaccinatedByDateRange(Date from, Date to) {
+        Optional<List<RegistroVacuna>> vaccineRegister = vaccineCrud.findAllByFechaVacunaBetween(from, to);
+        List<User> response = new ArrayList<User>();
+        for (RegistroVacuna vacuna: vaccineRegister.get()) {
+            response.add(userMapper.toUser(vacuna.getUsuario()));
+        }
+        return Optional.of(response);
     }
 }
