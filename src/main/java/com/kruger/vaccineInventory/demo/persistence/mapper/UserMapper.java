@@ -24,13 +24,15 @@ public interface UserMapper {
             @Mapping(source = "cedula", target = "countryId"),
             @Mapping(source = "telefono", target = "phone"),
             @Mapping(source = "contrasena", target = "password"),
+            @Mapping(source = "direccion", target = "address"),
+            @Mapping(source = "fechaNacimiento", target = "birthdate")
     })
     User toUser(Usuario usuario);
     List<User> toUsers(List<Usuario> usuarios);
 
     @InheritInverseConfiguration
-    @Mapping(target = "direccion", ignore = true)
-    @Mapping(target = "fechaNacimiento", ignore = true)
+    //@Mapping(target = "direccion", ignore = true)
+    //@Mapping(target = "fechaNacimiento", ignore = true)
     Usuario toUsuario(User user);
 
 }

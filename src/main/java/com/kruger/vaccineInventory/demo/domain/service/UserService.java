@@ -11,10 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -53,7 +50,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUserName(username);
+        final Optional<User> user = userRepository.findByUserName(username);
         if(user.isEmpty()){
             throw new UsernameNotFoundException("Invalid username or password.");
         }
@@ -64,4 +61,17 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public boolean updateUser(User user, String userName){
+        Optional<User> dbUser = userRepository.findByUserName(userName);
+        if(dbUser.isEmpty()) return false;
+        if(user.getPhone() == 0) return false;
+        if(user.getAddress().equals("")) return false;
+        if(user.getBirthdate() == null) return false;
+
+        dbUser.get().setPhone(user.getPhone());
+        dbUser.get().setAddress(user.getAddress());
+        dbUser.get().setBirthdate(user.getBirthdate());
+        userRepository.save(dbUser.get());
+        return true;
+    }
 }

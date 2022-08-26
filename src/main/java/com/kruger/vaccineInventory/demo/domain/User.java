@@ -1,5 +1,7 @@
 package com.kruger.vaccineInventory.demo.domain;
 
+import java.util.Date;
+
 public class User {
     private Integer id;
     private Long countryId;
@@ -11,6 +13,24 @@ public class User {
     private String password;
     private Boolean vaccineState;
     private Integer roleId;
+    private String address;
+    private Date birthdate;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
 
     public Long getCountryId() {
         return countryId;

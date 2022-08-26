@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import com.auth0.jwt.JWT;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,4 +58,18 @@ public class UserController {
         if(response.get().isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(response.get(), HttpStatus.OK);
     }
+
+    @Secured({ROLE_ADMIN, ROLE_USER})
+    @PostMapping("/update/employee")
+    public ResponseEntity<Boolean> updateUser(@RequestBody User user, @RequestHeader(name = "token") String token){
+        String userId = JWT.decode(token).getClaim("user_name").asString();
+        return new ResponseEntity<>(userService.updateUser(user, userId) ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
+    }
+
+    @Secured({ROLE_ADMIN})
+    @PostMapping("/update")
+    public ResponseEntity<Boolean> updateAny(@RequestBody User user){
+        return new ResponseEntity<>(userService.updateUser(user, user.getUserName()) ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
+    }
+
 }
