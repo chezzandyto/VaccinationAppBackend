@@ -19,11 +19,11 @@ public class RegistroVacuna {
     @Column(name = "fecha_vacuna")
     private Date fechaVacuna;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
     private Usuario usuario;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_vacuna", insertable = false, updatable = false)
     private Vacuna vacuna;
 

@@ -26,15 +26,31 @@ public class VaccineService {
         return vaccineRepository.getById(vaccineId);
     }
 
-    public Optional<Vaccine> save(Vaccine vaccine){
-        Integer userId = vaccine.getUserId();
+    public boolean saveById(Vaccine vaccine, int userId){
         Optional<User> user = userRepository.getUser(userId);
+        if(vaccine.getDate() == null ) return false;
+        if(vaccine.getUserId() == null) return false;
+        if(vaccine.getVaccineId() == null) return false;
+        if(vaccine.getName() == null) return false;
         if(!user.isEmpty()){
             user.get().setVaccineState(true);
             userRepository.save(user.get());
-            return Optional.of(vaccineRepository.save(vaccine));
+            vaccineRepository.save(vaccine);
+            return true;
         }else {
-            return Optional.empty();
+            return false;
+        }
+    }
+
+    public boolean saveByUserName(Vaccine vaccine, String userName){
+        Optional<User> user = userRepository.findByUserName(userName);
+        if(user.isEmpty()) return false;
+        else{
+            vaccine.setUserId(user.get().getId());
+            user.get().setVaccineState(true);
+            userRepository.save(user.get());
+            vaccineRepository.save(vaccine);
+            return true;
         }
     }
 

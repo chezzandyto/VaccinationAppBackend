@@ -61,7 +61,12 @@ public class UserController {
 
     @Secured({ROLE_ADMIN, ROLE_USER})
     @PostMapping("/update/employee")
-    public ResponseEntity<Boolean> updateUser(@RequestBody User user, @RequestHeader(name = "token") String token){
+    public ResponseEntity<Boolean> updateUser(@RequestBody User user, @RequestHeader(name = "Authorization") String token){
+        if (token.startsWith("Bearer ")){
+            token = token.substring(7, token.length());
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         String userId = JWT.decode(token).getClaim("user_name").asString();
         return new ResponseEntity<>(userService.updateUser(user, userId) ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
     }
@@ -69,7 +74,16 @@ public class UserController {
     @Secured({ROLE_ADMIN})
     @PostMapping("/update")
     public ResponseEntity<Boolean> updateAny(@RequestBody User user){
+        if(user.getUserName() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(userService.updateUser(user, user.getUserName()) ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
+    }
+    @Secured({ROLE_ADMIN})
+    @PostMapping("/new")
+    public ResponseEntity<User> saveUser(@RequestBody User user){
+        if (userService.save(user)) {
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }

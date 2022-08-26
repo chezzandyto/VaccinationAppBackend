@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -37,8 +38,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getVaccinatedUsers(vaccinationStatus);
     }
 
-    public User save(User user){
-        return userRepository.save(user);
+    public Boolean save(User user){
+        String pass = passwordEncoder(user.getPassword());
+        user.setPassword(pass);
+        return userRepository.save(user) != null;
     }
 
     public boolean delete(int userId){
@@ -73,5 +76,9 @@ public class UserService implements UserDetailsService {
         dbUser.get().setBirthdate(user.getBirthdate());
         userRepository.save(dbUser.get());
         return true;
+    }
+
+    public String passwordEncoder(String pass){
+        return BCrypt.hashpw(pass, BCrypt.gensalt());
     }
 }

@@ -13,15 +13,16 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface VaccineMapper {
 
     @Mappings({
-            @Mapping(source = "id", target = "vaccineId"),
+            @Mapping(source = "idVacuna", target = "vaccineId"),
             @Mapping(source = "vacuna.nombre", target = "name"),
             @Mapping(source = "idUsuario", target = "userId"),
             @Mapping(source = "fechaVacuna", target = "date"),
-            @Mapping(source = "usuario", target = "user"),
+            @Mapping(source = "usuario", target = "user")
+            //@Mapping(source = "vacuna", target = "vaccine")
     })
     Vaccine toVaccine(RegistroVacuna registroVacuna);
     List<Vaccine> toVaccines(List<RegistroVacuna> registroVacunas);

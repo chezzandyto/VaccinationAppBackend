@@ -1,5 +1,6 @@
 package com.kruger.vaccineInventory.demo.web.controller;
 
+import com.auth0.jwt.JWT;
 import com.kruger.vaccineInventory.demo.domain.User;
 import com.kruger.vaccineInventory.demo.domain.Vaccine;
 import com.kruger.vaccineInventory.demo.domain.service.VaccineService;
@@ -34,12 +35,27 @@ public class VaccineController {
         return vaccineService.getById(regVaccineId).map(vaccine -> new ResponseEntity<>(vaccine, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN})
     @PostMapping("/save")
-    public ResponseEntity<Vaccine> save(@RequestBody Vaccine vaccine){
-        Optional<Vaccine> response = vaccineService.save(vaccine);
-        if(response.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(vaccine, HttpStatus.CREATED);
+    public ResponseEntity<Vaccine> savebyId(@RequestBody Vaccine vaccine){
+        if(vaccine.getUserId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        boolean response = vaccineService.saveById(vaccine, vaccine.getUserId());
+        if(response) return new ResponseEntity<>(vaccine, HttpStatus.CREATED);
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Secured({ROLE_ADMIN, ROLE_USER})
+    @PostMapping("/save/employee")
+    public ResponseEntity<Vaccine> saveByUserName(@RequestBody Vaccine vaccine, @RequestHeader(name = "Authorization") String token){
+        if (token.startsWith("Bearer ")){
+            token = token.substring(7, token.length());
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        String userName = JWT.decode(token).getClaim("user_name").asString();
+        boolean response = vaccineService.saveByUserName(vaccine, userName);
+        if(response) return new ResponseEntity<>(vaccine, HttpStatus.CREATED);
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Secured({ROLE_ADMIN})

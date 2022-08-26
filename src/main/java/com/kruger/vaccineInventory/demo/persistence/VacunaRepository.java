@@ -40,7 +40,7 @@ public class VacunaRepository implements VaccineRepository {
     @Override
     public Vaccine save(Vaccine vaccine) {
         RegistroVacuna registroVacuna = vaccineMapper.toRegistroVacunas(vaccine);
-        return vaccineMapper.toVaccine(registroVacuna);
+        return vaccineMapper.toVaccine(vaccineCrud.save(registroVacuna));
     }
 
     @Override

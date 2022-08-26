@@ -8,6 +8,15 @@ public class Vaccine {
     private Integer userId;
     private Date date;
     private User user;
+    private VaccineName vaccine;
+
+    public VaccineName getVaccine() {
+        return vaccine;
+    }
+
+    public void setVaccine(VaccineName vaccine) {
+        this.vaccine = vaccine;
+    }
 
     public User getUser() {
         return user;
