@@ -31,3 +31,9 @@ Se recomienda Lanzar la aplicación desde IntelliJ Idea.
 ## Postman
 - Se incluye un archivo Postman Collection para mayor facilidad de probar la API (VaccineApp.postman_collection.json)
 - Considerar que se debe iniciar sesión al comenzar para generar los Tokens Necesarios
+
+## Usuarios de prueba
+Los usuarios en **data.sql** tienen como password **admin**
+
+## DOCUMENTATION
+La documentacion de la API se encuentra en: http://127.0.0.1:8090/vacunas/swagger-ui.html
